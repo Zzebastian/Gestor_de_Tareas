@@ -4,11 +4,15 @@ from diccionarios import *
 
 # Sección Tareas y menús
 def menuTexto():
+    
+    BdD = obtenerDatosJSON()
+    
     while True:
         for key in indicaciones:
             print(indicaciones[key])
 
-        eleccion = opcionMultiple()
+        opc = opciones['Menú inicial']
+        eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['SiError'])
         if eleccion == '1':
             agregarProyecto()
         elif eleccion == '3':
@@ -18,27 +22,57 @@ def menuTexto():
         elif eleccion == '5':
             imprimirProyectos()
         else:
-            print(confirmaciones['Salida'])
+            print(mensajes['Salida'])
             break
+    
+#
 
+##def tarea():
+##    global elemento
+##    for key in task:
+##        elemento[key] = input(task[key])
+##    return elemento
+###
 
-
-def tarea():
-    global elemento
+def agregarProyecto(BdD):
+    # Agrega elementos a la lista de proyectos
+    ID = len(BdD)+1
+    
     for key in task:
         elemento[key] = input(task[key])
-    return elemento
+        
+    BdD[ID] = elemento
 #
 
-def agregarProyecto():
-    # Agrega elementos a la lista de proyectos
-    global listaProyectos
-    elemento = tarea()
-    listaProyectos.append(elemento)
-#
 def modificarProyecto():
     print('Seguir acá, modificar proyecto')
+    while True:
+        ID = mostrarProyecto(BdD)
+        print(mensajes['Conf Mod Proyecto'])
+        opcionMultiple(opciones['Modificar Proyecto']['text'])
 #
+
+def mostrarProyecto(BdD):
+    print mensajes['Mostrar Proyecto']
+    while True:
+        try:
+            ID = int(input('->'))
+        except:
+            print(mensajes['Error ID'])
+        if ID not in range(1, len(BdD)):
+            print(mensajes['Error ID rango'])
+        else:
+            break
+
+    print(mensajes['Conf Mostrar Proyecto'])
+    text = 'ID'
+    print(f"{text:<15} | {ID:<15}"
+    for key in BdD[ID]:
+        print(f"{key:<15} | {BdD[ID][key]:<15}"
+
+    return ID
+#
+
 def borrarProyecto():
     print('Seguir acá borrar proyecto')
 
@@ -51,8 +85,8 @@ def imprimirProyectos():
         print('\n@@@@@@@@\n')
 #
 
-# Sección Funcione auxiliares
-def opcionMultiple(text, opciones = ["y", "n"], siError ="Only (y)es and (n)o are available options"):
+# Sección Funciones auxiliares
+def opcionMultiple(text, opciones = ['S', 'n', ''], siError ='Solo \033[34m S, N\033[0m son valores válidos'):
     # Itera hasta conseguir que se introduzcan solo los valores permitidos.
     while True:
         opcion = input(text).strip()
@@ -77,4 +111,16 @@ def guardarDatosJSON(BdD):
   with open("Gestor_de_Tareas/BdDProyectos.json", "w") as file:
     json.dump(BdD, file)
 #
-
+def actualizarDiccionarioJSON(id,BdD):
+  for key in BdD[id].keys():
+    print(f"Si desea modificar el {key}, ingrese el nuevo valor")
+    print("""caso contrario, ingrese "enter" """)
+    nuevoValor = input("->")
+    if nuevoValor == 0:
+      continue
+    print(f"¿Es {key} el valor correcto? ingrese (s)i o (n)o")
+    conf = opcionMultiple("->")
+    if conf == "s":
+      text = f"Ingrese el nuevo {key}: \033[34m"
+      BdD[id][key] = verificarAccion(text)
+#
