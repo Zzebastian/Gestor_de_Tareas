@@ -12,20 +12,21 @@ def menuTexto():
             print(ind[key])
 
         opc = opciones['Menú inicial']
-        eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['SiError'])
+        eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['siError'])
+        print('\033[0m')
         if eleccion == '1':
-            agregarProyecto()
+            agregarProyecto(BdD)
         elif eleccion == '2':
-            modificarProyecto()
+            modificarProyecto(BdD)
         elif eleccion == '3':
-            borrarProyecto()
+            borrarProyecto(BdD)
         elif eleccion == '4':
-            imprimirProyectos()
+            imprimirProyectos(BdD)
         else:
             print(mensajes['Salida'])
             guardarDatosJSON(BdD)
             break
-        print('\033[0m')
+        
 #
 
 
@@ -51,7 +52,7 @@ def modificarProyecto(BdD):
     
     ocurrio = modificarElemento(BdD, ID)
     if ocurrio == False:
-        print(mensajes['Modificacion anulada'])
+        print(mensajes['Modificación anulada'])
     else:
         print(mensajes['Modificacion exitosa'])
 #
@@ -71,11 +72,12 @@ def mostrarProyecto(BdD):
 
     print(mensajes['Conf Mostrar Proyecto'])
     text = 'ID'
-    print(f'{text:<15} | {ID:<15}')
-    for key in BdD[ID]:
-        print(f'{key:<15} | {BdD[ID][key]:<15}')
+    IDstr = str(ID)
+    print(f'{text:<15} | {ID}')
+    for key in BdD[IDstr]:
+        print(f'{key:<15} | {BdD[IDstr][key]}')
 
-    return ID
+    return IDstr
 #
 def modificarElemento(BdD, ID):
 
@@ -85,7 +87,7 @@ def modificarElemento(BdD, ID):
         print(ind[key])
 
     opc = opciones['Modificar elemento']
-    eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['SiError'])
+    eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['siError'])
     if eleccion == 's':
         return False
     
@@ -97,36 +99,32 @@ def modificarElemento(BdD, ID):
 
 def borrarProyecto(BdD):
     
-    ID = mostrarProyecto(BdD)
+    IDstr = mostrarProyecto(BdD)
     print(mensajes['Borrar Proyecto'])
     conf = input(base)
     if conf.lower() == 's':
-        BdD[ID] = {}
-        print(mensaje['Borrado exitoso'])
+        BdD[IDstr] = {}
+        print(mensajes['Borrado exitoso'])
     else:
-        print(mensaje['Borrado anulado'])
+        print(mensajes['Borrado anulado'])
 #
     
 
 def imprimirProyectos(BdD):
 
-    text = 'ID'
-    print(f'{text:<15} | {ID:<15}')
-    for key in BdD[ID]:
-        print(f'{key:<15} | {BdD[ID][key]:<15}'
     
     for ID in BdD:
         text = 'ID'
-        print(f'{text:<15} | {ID:<15}')
+        print(f'{text:<15} | {ID}')
 
         for key in BdD[ID]:
-            print(f'{key:<15} | {BdD[ID][key]:<15}'
+            print(f'{key:<15} | {BdD[ID][key]}')
 
         print('\n@@@@@@@@\n')
 #
 
 # Sección Funciones auxiliares
-def opcionMultiple(text, opciones = ['S', 'n', ''], siError ='Solo \033[34m S, N\033[0m son valores válidos'):
+def opcionMultiple(text, opciones = ['s', 'n', ''], siError =' \033[0mSolo \033[34mS, N\033[0m son valores válidos'):
     # Itera hasta conseguir que se introduzcan solo los valores permitidos.
     while True:
         opcion = input(text).strip()
@@ -136,7 +134,6 @@ def opcionMultiple(text, opciones = ['S', 'n', ''], siError ='Solo \033[34m S, N
           break
     return opcion
 
-print ('revisar seccion JSON')
 # Sección JSON
 def obtenerDatosJSON():
     # Obtiene los datos guardados en la base de datos, o bien, en caso de no tener, crea una nueva.
