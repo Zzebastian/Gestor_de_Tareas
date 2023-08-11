@@ -23,42 +23,41 @@ def menuTexto():
             imprimirProyectos()
         else:
             print(mensajes['Salida'])
-            break
-    
+            break  
 #
 
-##def tarea():
-##    global elemento
-##    for key in task:
-##        elemento[key] = input(task[key])
-##    return elemento
-###
 
 def agregarProyecto(BdD):
     # Agrega elementos a la lista de proyectos
+
     ID = len(BdD)+1
-    
+    elemento = []
     for key in task:
         elemento[key] = input(task[key])
         
     BdD[ID] = elemento
 #
 
-def modificarProyecto():
-    print('Seguir acá, modificar proyecto')
+def modificarProyecto(BdD):
+    print('Seguir acá, modificar proyecto, en modificarElemento')
     while True:
         ID = mostrarProyecto(BdD)
         print(mensajes['Conf Mod Proyecto'])
-        opcionMultiple(opciones['Modificar Proyecto']['text'])
+        opcion = opcionMultiple(opciones['Modificar Proyecto']['text'])
+        if opcion != 'n':
+            break
+    
+    modificarElemento(BdD)
 #
 
 def mostrarProyecto(BdD):
-    print mensajes['Mostrar Proyecto']
+    print(mensajes['Mostrar Proyecto'])
     while True:
         try:
             ID = int(input('->'))
         except:
             print(mensajes['Error ID'])
+
         if ID not in range(1, len(BdD)):
             print(mensajes['Error ID rango'])
         else:
@@ -66,12 +65,14 @@ def mostrarProyecto(BdD):
 
     print(mensajes['Conf Mostrar Proyecto'])
     text = 'ID'
-    print(f"{text:<15} | {ID:<15}"
+    print(f"{text:<15} | {ID:<15}")
     for key in BdD[ID]:
-        print(f"{key:<15} | {BdD[ID][key]:<15}"
+        print(f"{key:<15} | {BdD[ID][key]:<15}")
 
     return ID
 #
+def modificarElemento(BdD):
+    print('seguir acá modificar elemento')
 
 def borrarProyecto():
     print('Seguir acá borrar proyecto')
@@ -94,7 +95,7 @@ def opcionMultiple(text, opciones = ['S', 'n', ''], siError ='Solo \033[34m S, N
           print(siError)
         else:
           break
-    return (opcion)
+    return opcion
 
 
 # Sección JSON
@@ -105,6 +106,7 @@ def obtenerDatosJSON():
             BdD = json.load(file)
     except:
         BdD ={}
+
     return BdD
 #
 def guardarDatosJSON(BdD):
@@ -124,3 +126,4 @@ def actualizarDiccionarioJSON(id,BdD):
       text = f"Ingrese el nuevo {key}: \033[34m"
       BdD[id][key] = verificarAccion(text)
 #
+

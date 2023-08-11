@@ -1,10 +1,13 @@
 
+
+# Es importante verificar que la base de datos y la variable "task" posean las mismas llaves
+# De lo contrario habrá problemas en la implementación.
 task = {'Proyecto': 'Ingresar Nombre de proyecto: ',
         'Github': 'Ingresar web de Github: ',
         'Estado': 'Ingresar estado proyecto: ',
-        'Tareas próximas': 'Ingresar tareas siguiesntes: ',
+        'Tarea siguiente': 'Ingresar tarea siguiente: ',
         'Notas': 'Si hay notas, agréguelas: ',
-        'Consigna': 'Ingrese la consigna del proyecto: '
+        'Instrucciones': 'Ingrese la consigna del proyecto: '
         }
 
 indicaciones = {'Menu': '\033[0m¿Qué desea hacer?',
@@ -24,7 +27,7 @@ opciones = {'Menú inicial': {'text': '-> \033[34m', 'Opciones': ['1','2','3','4
 mensajes = {'Salida': 'Usted ha salido exitosamente',
             'Mostrar Proyecto': 'Ingrese Id del proyecto deseado',
             'Error ID': 'Hay un error en el ID ingresado (no es un número entero)',
-            'Error ID': 'Hay un error en el ID ingresado (el mismo está fuera de rango)',
+            'Error ID rango': 'Hay un error en el ID ingresado (el mismo está fuera de rango)',
             'Conf Mostrar Proyecto': 'Verifique que el proyecto elegido sea el correcto',
-            'Conf Mod Proyecto': '¿Desea modificar el proyecto presentado?'),
+            'Conf Mod Proyecto': '¿Desea modificar el proyecto presentado?',
             }
