@@ -6,24 +6,26 @@ from diccionarios import *
 def menuTexto():
     
     BdD = obtenerDatosJSON()
-    
+    ind = indicaciones['tareas']
     while True:
-        for key in indicaciones:
-            print(indicaciones[key])
+        for key in ind:
+            print(ind[key])
 
         opc = opciones['Menú inicial']
         eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['SiError'])
         if eleccion == '1':
             agregarProyecto()
-        elif eleccion == '3':
+        elif eleccion == '2':
             modificarProyecto()
-        elif eleccion == '4':
+        elif eleccion == '3':
             borrarProyecto()
-        elif eleccion == '5':
+        elif eleccion == '4':
             imprimirProyectos()
         else:
             print(mensajes['Salida'])
-            break  
+            guardarDatosJSON(BdD)
+            break
+        print('\033[0m')
 #
 
 
@@ -39,15 +41,19 @@ def agregarProyecto(BdD):
 #
 
 def modificarProyecto(BdD):
-    print('Seguir acá, modificar proyecto, en modificarElemento')
+
     while True:
         ID = mostrarProyecto(BdD)
         print(mensajes['Conf Mod Proyecto'])
-        opcion = opcionMultiple(opciones['Modificar Proyecto']['text'])
+        opcion = opcionMultiple(base)
         if opcion != 'n':
             break
     
-    modificarElemento(BdD)
+    ocurrio = modificarElemento(BdD, ID)
+    if ocurrio == False:
+        print(mensajes['Modificacion anulada'])
+    else:
+        print(mensajes['Modificacion exitosa'])
 #
 
 def mostrarProyecto(BdD):
@@ -59,30 +65,63 @@ def mostrarProyecto(BdD):
             print(mensajes['Error ID'])
 
         if ID not in range(1, len(BdD)):
-            print(mensajes['Error ID rango'])
+           print(mensajes['Error ID rango'])
         else:
             break
 
     print(mensajes['Conf Mostrar Proyecto'])
     text = 'ID'
-    print(f"{text:<15} | {ID:<15}")
+    print(f'{text:<15} | {ID:<15}')
     for key in BdD[ID]:
-        print(f"{key:<15} | {BdD[ID][key]:<15}")
+        print(f'{key:<15} | {BdD[ID][key]:<15}')
 
     return ID
 #
-def modificarElemento(BdD):
-    print('seguir acá modificar elemento')
+def modificarElemento(BdD, ID):
 
-def borrarProyecto():
-    print('Seguir acá borrar proyecto')
+    ind = indicaciones['modificar']
+    
+    for key in ind:
+        print(ind[key])
 
-def imprimirProyectos():
-    print('Probablemente halla que revistar acá imprimir proyectos')
-    global listaProyectos
-    for proy in listaProyectos:
-        for key in task:
-            print(proy[key])
+    opc = opciones['Modificar elemento']
+    eleccion = opcionMultiple(opc['text'],opc['Opciones'],opc['SiError'])
+    if eleccion == 's':
+        return False
+    
+    print(mensajes['Modificación nuevo valor'])
+    text = tuplaElemento(int(eleccion)-1)
+    BdD[ID][text] = input(base)
+#
+    
+
+def borrarProyecto(BdD):
+    
+    ID = mostrarProyecto(BdD)
+    print(mensajes['Borrar Proyecto'])
+    conf = input(base)
+    if conf.lower() == 's':
+        BdD[ID] = {}
+        print(mensaje['Borrado exitoso'])
+    else:
+        print(mensaje['Borrado anulado'])
+#
+    
+
+def imprimirProyectos(BdD):
+
+    text = 'ID'
+    print(f'{text:<15} | {ID:<15}')
+    for key in BdD[ID]:
+        print(f'{key:<15} | {BdD[ID][key]:<15}'
+    
+    for ID in BdD:
+        text = 'ID'
+        print(f'{text:<15} | {ID:<15}')
+
+        for key in BdD[ID]:
+            print(f'{key:<15} | {BdD[ID][key]:<15}'
+
         print('\n@@@@@@@@\n')
 #
 
@@ -97,7 +136,7 @@ def opcionMultiple(text, opciones = ['S', 'n', ''], siError ='Solo \033[34m S, N
           break
     return opcion
 
-
+print ('revisar seccion JSON')
 # Sección JSON
 def obtenerDatosJSON():
     # Obtiene los datos guardados en la base de datos, o bien, en caso de no tener, crea una nueva.
@@ -113,17 +152,5 @@ def guardarDatosJSON(BdD):
   with open("Gestor_de_Tareas/BdDProyectos.json", "w") as file:
     json.dump(BdD, file)
 #
-def actualizarDiccionarioJSON(id,BdD):
-  for key in BdD[id].keys():
-    print(f"Si desea modificar el {key}, ingrese el nuevo valor")
-    print("""caso contrario, ingrese "enter" """)
-    nuevoValor = input("->")
-    if nuevoValor == 0:
-      continue
-    print(f"¿Es {key} el valor correcto? ingrese (s)i o (n)o")
-    conf = opcionMultiple("->")
-    if conf == "s":
-      text = f"Ingrese el nuevo {key}: \033[34m"
-      BdD[id][key] = verificarAccion(text)
-#
+
 
