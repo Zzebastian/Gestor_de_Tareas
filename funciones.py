@@ -1,6 +1,8 @@
-# Este archivo se crea de la terminal
+# -*- coding: utf-8 -*-
+
 import json
 from diccionarios import *
+
 
 # Sección Tareas y menús
 def menuTexto():
@@ -26,21 +28,17 @@ def menuTexto():
             print(mensajes['Salida'])
             guardarDatosJSON(BdD)
             break
-        
 #
-
-
 def agregarProyecto(BdD):
     # Agrega elementos a la lista de proyectos
 
     ID = len(BdD)+1
-    elemento = []
+    elemento = {}
     for key in task:
         elemento[key] = input(task[key])
-        
-    BdD[ID] = elemento
+    IDstr = str(ID)    
+    BdD[IDstr] = elemento
 #
-
 def modificarProyecto(BdD):
 
     while True:
@@ -54,9 +52,8 @@ def modificarProyecto(BdD):
     if ocurrio == False:
         print(mensajes['Modificación anulada'])
     else:
-        print(mensajes['Modificacion exitosa'])
+        print(mensajes['Modificación exitosa'])
 #
-
 def mostrarProyecto(BdD):
     print(mensajes['Mostrar Proyecto'])
     while True:
@@ -65,7 +62,7 @@ def mostrarProyecto(BdD):
         except:
             print(mensajes['Error ID'])
 
-        if ID not in range(1, len(BdD)):
+        if ID not in range(1, len(BdD)+1):
            print(mensajes['Error ID rango'])
         else:
             break
@@ -92,11 +89,10 @@ def modificarElemento(BdD, ID):
         return False
     
     print(mensajes['Modificación nuevo valor'])
-    text = tuplaElemento(int(eleccion)-1)
+    text = listaElementos[int(eleccion)-1]
+    print(text)
     BdD[ID][text] = input(base)
 #
-    
-
 def borrarProyecto(BdD):
     
     IDstr = mostrarProyecto(BdD)
@@ -108,8 +104,6 @@ def borrarProyecto(BdD):
     else:
         print(mensajes['Borrado anulado'])
 #
-    
-
 def imprimirProyectos(BdD):
 
     
@@ -133,6 +127,7 @@ def opcionMultiple(text, opciones = ['s', 'n', ''], siError =' \033[0mSolo \033[
         else:
           break
     return opcion
+#
 
 # Sección JSON
 def obtenerDatosJSON():
